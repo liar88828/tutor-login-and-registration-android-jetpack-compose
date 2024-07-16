@@ -1,6 +1,7 @@
 package com.tutor.loginandregistration.ui.signup
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,8 +25,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -55,6 +59,14 @@ fun RegisterScreen(
 	val confPass = rememberSaveable { mutableStateOf("") }
 	val checkBox = rememberSaveable { mutableStateOf(false) }
 	val context = LocalContext.current
+	var isPasswordValid by remember { mutableStateOf<Boolean>(false) }
+	val isFieldNotEmpty = firstName.value.isNotEmpty()
+			&& lastName.value.isNotEmpty()
+			&& email.value.isNotEmpty()
+			&& password.value.isNotEmpty()
+			&& confPass.value.isNotEmpty()
+			&& checkBox.value
+
 	Column(
 		modifier = modifier
 			.fillMaxSize()
@@ -139,7 +151,7 @@ fun RegisterScreen(
 					withStyle(SpanStyle(color = MaterialTheme.colorScheme.onBackground)) {
 						append(" And ")
 					}
-					
+
 					withStyle(SpanStyle(color = MaterialTheme.colorScheme.primary)) {
 						pushStringAnnotation(tag = policyText, policyText)
 						append(policyText)
@@ -155,12 +167,17 @@ fun RegisterScreen(
 					annotatedString.getStringAnnotations(offset, offset).forEach {
 						when (it.tag) {
 							privacyText -> {
-								Toast.makeText(context, "Privacy Policy", Toast.LENGTH_SHORT).show()
+								Toast.makeText(context, "Privacy Policy", Toast.LENGTH_SHORT)
+									.show()
 								onPrivacy()
 							}
 
 							policyText -> {
-								Toast.makeText(context, "Policy Text Clicked", Toast.LENGTH_SHORT)
+								Toast.makeText(
+									context,
+									"Policy Text Clicked",
+									Toast.LENGTH_SHORT
+								)
 									.show()
 								onPolicy()
 
@@ -176,10 +193,19 @@ fun RegisterScreen(
 		}
 
 		Spacer(Modifier.height(defaultPadding + 8.dp))
+		AnimatedVisibility(visible = isPasswordValid) {
+			Text(text = "Password is not Match", color = MaterialTheme.colorScheme.error)
+		}
 
 		Button(
+			enabled = isFieldNotEmpty,
 			modifier = modifier.fillMaxWidth(),
-			onClick = onRegister
+			onClick = {
+				isPasswordValid = password.value != confPass.value
+				if (!isPasswordValid) {
+					onRegister()
+				}
+			}
 		) {
 			Text(text = "Register")
 		}

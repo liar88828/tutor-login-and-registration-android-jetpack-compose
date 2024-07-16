@@ -54,6 +54,9 @@ fun LoginScreen(
 	val password = rememberSaveable { mutableStateOf("") }
 	val checkBox = rememberSaveable { mutableStateOf(false) }
 	val context = LocalContext.current
+	val isFieldsEmpty = username.value.isNotEmpty() && password.value.isNotEmpty()
+
+
 	Column(
 		modifier = modifier
 			.fillMaxSize()
@@ -108,7 +111,8 @@ fun LoginScreen(
 		Button(
 			modifier = modifier.fillMaxWidth(),
 //			colors = ButtonDefaults.buttonColors(Color.Red),
-			onClick = onLogin
+			onClick = onLogin,
+			enabled = isFieldsEmpty
 		) {
 			Text(
 				text = "Login",
