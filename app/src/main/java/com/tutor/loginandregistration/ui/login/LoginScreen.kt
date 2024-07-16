@@ -44,7 +44,12 @@ val defaultPadding = 16.dp
 val itemSpacing = 8.dp
 
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier) {
+fun LoginScreen(
+	modifier: Modifier = Modifier,
+//	navController: NavController
+	onLogin: () -> Unit,
+	onRegister: () -> Unit
+) {
 	val username = rememberSaveable { mutableStateOf("") }
 	val password = rememberSaveable { mutableStateOf("") }
 	val checkBox = rememberSaveable { mutableStateOf(false) }
@@ -103,7 +108,8 @@ fun LoginScreen(modifier: Modifier = Modifier) {
 		Button(
 			modifier = modifier.fillMaxWidth(),
 //			colors = ButtonDefaults.buttonColors(Color.Red),
-			onClick = { /*TODO*/ }) {
+			onClick = onLogin
+		) {
 			Text(
 				text = "Login",
 				fontSize = 20.sp,
@@ -127,7 +133,7 @@ fun LoginScreen(modifier: Modifier = Modifier) {
 					}
 				}
 			},
-			onSignUpClick = {},
+			onSignUpClick = onRegister,
 			modifier = modifier
 				.fillMaxSize()
 				.wrapContentSize(align = Alignment.BottomCenter)
@@ -188,6 +194,8 @@ fun AlternativeLoginOptions(
 @Composable
 private fun LoginScreenPrev() {
 	LoginAndRegistrationTheme {
-		LoginScreen()
+		LoginScreen(
+			onLogin = {}, onRegister = {}
+		)
 	}
 }

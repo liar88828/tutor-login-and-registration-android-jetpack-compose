@@ -41,7 +41,13 @@ import com.tutor.loginandregistration.ui.component.LoginTextField
 import com.tutor.loginandregistration.ui.login.defaultPadding
 
 @Composable
-fun RegisterScreen(modifier: Modifier = Modifier) {
+fun RegisterScreen(
+	modifier: Modifier = Modifier,
+	onRegister: () -> Unit,
+	onLogin: () -> Unit,
+	onPolicy: () -> Unit,
+	onPrivacy: () -> Unit,
+) {
 	val firstName = rememberSaveable { mutableStateOf("") }
 	val lastName = rememberSaveable { mutableStateOf("") }
 	val email = rememberSaveable { mutableStateOf("") }
@@ -120,38 +126,44 @@ fun RegisterScreen(modifier: Modifier = Modifier) {
 			) {
 				val privacyText = "Privacy"
 				val policyText = "Policy"
-				val annotationString = buildAnnotatedString {
-					withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onBackground)) {
+				val annotatedString = buildAnnotatedString {
+					withStyle(SpanStyle(color = MaterialTheme.colorScheme.onBackground)) {
 						append("I Agree with")
 					}
 					append(" ")
-
 					withStyle(SpanStyle(color = MaterialTheme.colorScheme.primary)) {
 						pushStringAnnotation(tag = privacyText, privacyText)
 						append(privacyText)
 					}
-					append(" And ")
+
+					withStyle(SpanStyle(color = MaterialTheme.colorScheme.onBackground)) {
+						append(" And ")
+					}
+					
 					withStyle(SpanStyle(color = MaterialTheme.colorScheme.primary)) {
 						pushStringAnnotation(tag = policyText, policyText)
 						append(policyText)
 					}
 				}
 
+
 				Checkbox(
 					checked = checkBox.value,
 					onCheckedChange = { checkBox.value = it },
 				)
-				ClickableText(text = annotationString) { offset ->
-					annotationString.getStringAnnotations(offset, offset).forEach {
+				ClickableText(text = annotatedString) { offset ->
+					annotatedString.getStringAnnotations(offset, offset).forEach {
 						when (it.tag) {
 							privacyText -> {
 								Toast.makeText(context, "Privacy Policy", Toast.LENGTH_SHORT).show()
+								onPrivacy()
 							}
 
 							policyText -> {
 								Toast.makeText(context, "Policy Text Clicked", Toast.LENGTH_SHORT)
 									.show()
-//								onPolicyClick()
+								onPolicy()
+
 							}
 						}
 					}
@@ -167,7 +179,7 @@ fun RegisterScreen(modifier: Modifier = Modifier) {
 
 		Button(
 			modifier = modifier.fillMaxWidth(),
-			onClick = { /*TODO*/ }
+			onClick = onRegister
 		) {
 			Text(text = "Register")
 		}
@@ -177,7 +189,9 @@ fun RegisterScreen(modifier: Modifier = Modifier) {
 //			horizontalArrangement = Arrangement.Center
 		) {
 			Text(text = "Already have an account?")
-			TextButton(onClick = { /*TODO*/ }) {
+			TextButton(
+				onClick = onRegister
+			) {
 				Text(text = "Login")
 			}
 		}
@@ -187,5 +201,5 @@ fun RegisterScreen(modifier: Modifier = Modifier) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun RegisterScreenPrev() {
-	RegisterScreen()
+	RegisterScreen(onRegister = {}, onLogin = {}, onPolicy = {}, onPrivacy = {})
 }

@@ -8,7 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.tutor.loginandregistration.ui.login.LoginScreen
+import androidx.navigation.compose.rememberNavController
+import com.tutor.loginandregistration.ui.NavigationScreen
 import com.tutor.loginandregistration.ui.theme.LoginAndRegistrationTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,7 +21,8 @@ class MainActivity : ComponentActivity() {
 				Surface(
 					modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
 				) {
-					LoginScreen()
+					val navController = rememberNavController()
+					NavigationScreen(navHostController = navController)
 				}
 			}
 		}
