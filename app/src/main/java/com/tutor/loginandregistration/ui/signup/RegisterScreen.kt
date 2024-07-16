@@ -216,7 +216,7 @@ fun RegisterScreen(
 		) {
 			Text(text = "Already have an account?")
 			TextButton(
-				onClick = onRegister
+				onClick = onLogin
 			) {
 				Text(text = "Login")
 			}
